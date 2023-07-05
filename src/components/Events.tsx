@@ -42,14 +42,16 @@ export const EventList = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    const interval = setInterval(async () => {
+    const fetch = async () => {
       try {
         const events = await getEvents(pageNumber)
         setCurrentEvents(events)
       } catch (error) {
         enqueueSnackbar(`Failed to get events, error: ${error}`, { persist: true, variant: 'error' })
       }
-    }, globalConfig.pollingInterval)
+    }
+    fetch()
+    const interval = setInterval(fetch, globalConfig.pollingInterval)
 
     return () => { clearInterval(interval) }
   }, [pageNumber, enqueueSnackbar])
